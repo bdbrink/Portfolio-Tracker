@@ -23,6 +23,26 @@ func currentMarketData(ticker string) {
 	// get the upside from the current 52 week low
 	upside := math.Trunc(t.FiftyTwoWeekLow / t.FiftyTwoWeekHigh * 100)
 	fmt.Printf("Percent Upside: %v %% \n", upside)
+
+}
+
+func addToPortfolio(ticker string) {
+
+	fmt.Println("Is this in your Portfolio ? yes or no")
+
+	var answer string
+
+	// ask for input
+	fmt.Scanln(&answer)
+
+	// sort depending on user input
+	if answer == "yes" {
+		fmt.Println("if you held for 5 years with 10k you would have 10k")
+	} else if answer == "no" {
+		fmt.Println("Would you like to purchase ?")
+	} else {
+		fmt.Println("I have no idea how to respond to that")
+	}
 }
 
 func main() {
@@ -37,5 +57,8 @@ func main() {
 
 	// get info on the security
 	ticker := flag.Args()[0]
+
 	currentMarketData(ticker)
+	addToPortfolio(ticker)
+
 }
