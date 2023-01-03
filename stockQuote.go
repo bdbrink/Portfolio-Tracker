@@ -54,6 +54,7 @@ func addToPortfolio(symbol string, price float64) {
 		convertPrice := fmt.Sprintf("%.2f", price)
 		data := []string{symbol, convertPrice}
 
+		// write data to the csv file
 		w := csv.NewWriter(file)
 		defer w.Flush()
 
