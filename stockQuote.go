@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"time"
 
 	"github.com/piquette/finance-go/quote"
 	log "github.com/sirupsen/logrus"
@@ -50,9 +51,13 @@ func addToPortfolio(symbol string, price float64) {
 			log.Fatalln("failed to open file", err)
 		}
 
+		// get the current date and convert for the spreadsheet
+		currentTime := time.Now()
+		convertTime := fmt.Sprintf("%v", currentTime.Format("01-02-2006"))
+
 		// format data to write to file, convert float to string
 		convertPrice := fmt.Sprintf("%.2f", price)
-		data := []string{symbol, convertPrice}
+		data := []string{convertTime, symbol, convertPrice}
 
 		// write data to the csv file
 		w := csv.NewWriter(file)
