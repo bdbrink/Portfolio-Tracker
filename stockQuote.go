@@ -1,15 +1,18 @@
 package main
 
 import (
+	"encoding/csv"
 	"flag"
 	"fmt"
 	"math"
+	"os"
+	"time"
 
 	"github.com/piquette/finance-go/quote"
 	log "github.com/sirupsen/logrus"
 )
 
-func currentMarketData(ticker string) {
+func currentMarketData(ticker string) (string, float64) {
 
 	t, _ := quote.Get(ticker)
 	fmt.Printf("-- %v --\n", t.ShortName)
@@ -24,9 +27,11 @@ func currentMarketData(ticker string) {
 	upside := math.Trunc(t.FiftyTwoWeekLow / t.FiftyTwoWeekHigh * 100)
 	fmt.Printf("Percent Upside: %v %% \n", upside)
 
+	return t.Symbol, t.Ask
+
 }
 
-func addToPortfolio(ticker string) {
+func addToPortfolio(symbol string, price float64) {
 
 	fmt.Println("Is this in your Portfolio ? yes or no")
 
@@ -37,7 +42,29 @@ func addToPortfolio(ticker string) {
 
 	// sort depending on user input
 	if answer == "yes" {
-		fmt.Println("if you held for 5 years with 10k you would have 10k")
+		fmt.Println("Adding to spreadsheet")
+		file, err := os.Create("stocks.csv")
+
+		defer file.Close()
+
+		if err != nil {
+			log.Fatalln("failed to open file", err)
+		}
+
+		// get the current date and convert for the spreadsheet
+		currentTime := time.Now()
+		convertTime := fmt.Sprintf("%v", currentTime.Format("01-02-2006"))
+
+		// format data to write to file, convert float to string
+		convertPrice := fmt.Sprintf("%.2f", price)
+		data := []string{convertTime, symbol, convertPrice}
+
+		// write data to the csv file
+		w := csv.NewWriter(file)
+		defer w.Flush()
+
+		w.Write(data)
+
 	} else if answer == "no" {
 		fmt.Println("Would you like to purchase ?")
 	} else {
@@ -58,7 +85,7 @@ func main() {
 	// get info on the security
 	ticker := flag.Args()[0]
 
-	currentMarketData(ticker)
-	addToPortfolio(ticker)
+	symbol, price := currentMarketData(ticker)
+	addToPortfolio(symbol, price)
 
 }
