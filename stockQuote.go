@@ -33,7 +33,7 @@ func currentMarketData(ticker string) (string, float64) {
 
 func addToPortfolio(symbol string, price float64) {
 
-	fmt.Println("Is this in your Portfolio ? yes or no")
+	fmt.Println("Is this in your Portfolio ? yes (y) or no (n)")
 
 	var answer string
 
@@ -41,8 +41,14 @@ func addToPortfolio(symbol string, price float64) {
 	fmt.Scanln(&answer)
 
 	// sort depending on user input
-	if answer == "yes" {
+	if answer == "yes" || answer == "y" || answer == "Yes" {
 		fmt.Println("Adding to spreadsheet")
+
+		// ask for number of shares owned
+		fmt.Println("How many shares do you own ?")
+		var sharesOwned string
+		fmt.Scanln(&sharesOwned)
+
 		file, err := os.Create("stocks.csv")
 
 		defer file.Close()
@@ -57,7 +63,7 @@ func addToPortfolio(symbol string, price float64) {
 
 		// format data to write to file, convert float to string
 		convertPrice := fmt.Sprintf("%.2f", price)
-		data := []string{convertTime, symbol, convertPrice}
+		data := []string{convertTime, symbol, convertPrice, sharesOwned}
 
 		// write data to the csv file
 		w := csv.NewWriter(file)
@@ -65,8 +71,8 @@ func addToPortfolio(symbol string, price float64) {
 
 		w.Write(data)
 
-	} else if answer == "no" {
-		fmt.Println("Would you like to purchase ?")
+	} else if answer == "no" || answer == "n" || answer == "No" {
+		fmt.Println("Okie Dokie, Warren Buffet wouldn't own it anyways")
 	} else {
 		fmt.Println("I have no idea how to respond to that")
 	}
