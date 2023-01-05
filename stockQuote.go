@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"io"
 	"math"
 	"os"
 	"time"
@@ -31,7 +32,7 @@ func currentMarketData(ticker string) (string, float64) {
 
 }
 
-func addToPortfolio(symbol string, price float64) {
+func addToPortfolio(symbol string, price float64) bool {
 
 	fmt.Println("Is this in your Portfolio ? yes (y) or no (n)")
 
@@ -71,10 +72,41 @@ func addToPortfolio(symbol string, price float64) {
 
 		w.Write(data)
 
+		return true
+
 	} else if answer == "no" || answer == "n" || answer == "No" {
 		fmt.Println("Okie Dokie, Warren Buffet wouldn't own it anyways")
 	} else {
 		fmt.Println("I have no idea how to respond to that")
+	}
+	return false
+}
+
+func readFile() {
+
+	file, err := os.Open("stocks.csv")
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	r := csv.NewReader(file)
+
+	for {
+
+		record, err := r.Read()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for value := range record {
+			fmt.Printf("%s\n", record[value])
+		}
 	}
 }
 
@@ -92,6 +124,10 @@ func main() {
 	ticker := flag.Args()[0]
 
 	symbol, price := currentMarketData(ticker)
-	addToPortfolio(symbol, price)
+	portfolio := addToPortfolio(symbol, price)
+
+	if portfolio == true {
+		readFile()
+	}
 
 }
