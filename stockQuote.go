@@ -85,6 +85,7 @@ func addToPortfolio(symbol string, price float64) bool {
 func readFile() {
 
 	file, err := os.Open("stocks.csv")
+	defer file.Close()
 
 	if err != nil {
 		log.Fatalln(err)
@@ -110,6 +111,24 @@ func readFile() {
 	}
 }
 
+func checkForFile() [][]string {
+
+	file, err := os.Open("stocks.csv")
+	defer file.Close()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	csvReader := csv.NewReader(file)
+	records, err := csvReader.ReadAll()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return records
+}
+
 func main() {
 
 	// parse the ticker from the user
@@ -127,6 +146,7 @@ func main() {
 	portfolio := addToPortfolio(symbol, price)
 
 	if portfolio == true {
+		checkForFile()
 		readFile()
 	}
 
