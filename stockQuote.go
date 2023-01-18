@@ -10,10 +10,11 @@ import (
 	"time"
 
 	"github.com/piquette/finance-go/quote"
+	googlesearch "github.com/rocketlaunchr/google-search"
 	log "github.com/sirupsen/logrus"
 )
 
-func currentMarketData(ticker string) (string, float64) {
+func currentMarketData(ticker string) (string, float64, string) {
 
 	t, _ := quote.Get(ticker)
 	fmt.Printf("-- %v --\n", t.ShortName)
@@ -28,7 +29,7 @@ func currentMarketData(ticker string) (string, float64) {
 	upside := math.Trunc(t.FiftyTwoWeekLow / t.FiftyTwoWeekHigh * 100)
 	fmt.Printf("Percent Upside: %v %% \n", upside)
 
-	return t.Symbol, t.Ask
+	return t.Symbol, t.Ask, t.ShortName
 
 }
 
@@ -129,6 +130,12 @@ func checkForFile() [][]string {
 	return records
 }
 
+func howDoTheyDoIt(name string) {
+
+	company := fmt.Sprintf("how does %v make money", name)
+	fmt.Println(googlesearch.Search(nil, company))
+}
+
 func main() {
 
 	// parse the ticker from the user
@@ -142,7 +149,8 @@ func main() {
 	// get info on the security
 	ticker := flag.Args()[0]
 
-	symbol, price := currentMarketData(ticker)
+	symbol, price, name := currentMarketData(ticker)
+	howDoTheyDoIt(name)
 	portfolio := addToPortfolio(symbol, price)
 
 	if portfolio == true {
