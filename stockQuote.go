@@ -133,11 +133,15 @@ func checkForFile() [][]string {
 func howDoTheyDoIt(name string) {
 
 	company := fmt.Sprintf("how does %v make money", name)
-	fmt.Println(googlesearch.Search(nil, company))
+	searchResults, _ := googlesearch.Search(nil, company)
+
+	// get top result from the search
+	resultTop := searchResults[0]
+
+	fmt.Printf("the top result on how %v, makes money: %v", name, resultTop)
 }
 
 func main() {
-
 	// parse the ticker from the user
 	flag.Parse()
 
