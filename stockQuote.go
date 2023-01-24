@@ -127,7 +127,6 @@ func checkForFile() [][]string {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(records)
 	return records
 }
 
