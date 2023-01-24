@@ -127,6 +127,7 @@ func checkForFile() [][]string {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	fmt.Println(records)
 	return records
 }
 
@@ -136,9 +137,11 @@ func howDoTheyDoIt(name string) {
 	searchResults, _ := googlesearch.Search(nil, company)
 
 	// get top result from the search
-	resultTop := searchResults[0]
+	resultTop := searchResults[0].Description
+	resultURL := searchResults[0].URL
 
-	fmt.Printf("the top result on how %v makes money: %v \n", name, resultTop)
+	fmt.Printf("%v makes money by: %v \n", name, resultTop)
+	fmt.Printf("you can find more information here: %v \n", resultURL)
 }
 
 func main() {
