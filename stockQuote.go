@@ -108,13 +108,15 @@ func readFile() {
 	}
 }
 
-func checkForFile() [][]string {
+func checkForFile() (bool, [][]string) {
 
 	file, err := os.Open("stocks.csv")
 	defer file.Close()
+	var empty [][]string
 
 	if err != nil {
 		log.Fatalln(err)
+		return false, empty
 	}
 
 	csvReader := csv.NewReader(file)
@@ -123,7 +125,7 @@ func checkForFile() [][]string {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return records
+	return true, records
 }
 
 func addSecurity(data []string) {
