@@ -67,11 +67,7 @@ func addToPortfolio(symbol string, price float64) bool {
 		convertPrice := fmt.Sprintf("%.2f", price)
 		data := []string{convertTime, symbol, convertPrice, sharesOwned}
 
-		// write data to the csv file
-		w := csv.NewWriter(file)
-		defer w.Flush()
-
-		w.Write(data)
+		addSecurity(data)
 
 		return true
 
@@ -128,6 +124,24 @@ func checkForFile() [][]string {
 		log.Fatalln(err)
 	}
 	return records
+}
+
+func addSecurity(data []string) {
+
+	file, err := os.Open("stocks.csv")
+
+	defer file.Close()
+
+	if err != nil {
+		log.Fatalln("failed to open file", err)
+	}
+
+	w := csv.NewWriter(file)
+	w.Write(data)
+
+	defer w.Flush()
+
+	fmt.Println(data)
 }
 
 func howDoTheyDoIt(name string) {
