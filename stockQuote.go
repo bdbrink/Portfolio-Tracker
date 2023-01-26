@@ -67,6 +67,8 @@ func addToPortfolio(symbol string, price float64) bool {
 		convertPrice := fmt.Sprintf("%.2f", price)
 		data := []string{convertTime, symbol, convertPrice, sharesOwned}
 
+		// check for file first, create/append depending on if file is found
+		checkForFile()
 		addSecurity(data)
 
 		return true
@@ -176,7 +178,6 @@ func main() {
 	portfolio := addToPortfolio(symbol, price)
 
 	if portfolio == true {
-		checkForFile()
 		readFile()
 	}
 
