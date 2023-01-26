@@ -68,7 +68,6 @@ func addToPortfolio(symbol string, price float64) bool {
 		data := []string{convertTime, symbol, convertPrice, sharesOwned}
 
 		// check for file first, create/append depending on if file is found
-		checkForFile()
 		addSecurity(data)
 
 		return true
@@ -110,7 +109,7 @@ func readFile() {
 	}
 }
 
-func checkForFile() (bool, [][]string) {
+func checkForFile() [][]string {
 
 	file, err := os.Open("stocks.csv")
 	defer file.Close()
@@ -118,7 +117,7 @@ func checkForFile() (bool, [][]string) {
 
 	if err != nil {
 		log.Fatalln(err)
-		return false, empty
+		return empty
 	}
 
 	csvReader := csv.NewReader(file)
@@ -127,7 +126,7 @@ func checkForFile() (bool, [][]string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return true, records
+	return records
 }
 
 func addSecurity(data []string) {
