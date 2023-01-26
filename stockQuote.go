@@ -132,7 +132,7 @@ func checkForFile() (bool, [][]string) {
 
 func addSecurity(data []string) {
 
-	file, err := os.Open("stocks.csv")
+	file, err := os.Create("stocks.csv")
 
 	defer file.Close()
 
