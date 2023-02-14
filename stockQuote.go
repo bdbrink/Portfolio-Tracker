@@ -105,7 +105,7 @@ func readFile() {
 		}
 
 		for value := range record {
-			fmt.Printf("%s\n", record[value])
+			fmt.Printf("%s \n", record[value])
 		}
 	}
 }
